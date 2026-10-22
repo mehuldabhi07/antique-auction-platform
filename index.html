@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antique Auction Platform</title>
+    <!-- Tailwind CSS (Styling) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome (Icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-[#F5EDE6] text-[#2D1B12] font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Header / Navigation -->
+    <header class="bg-[#2D1B12] text-[#F5EDE6] sticky top-0 z-50 shadow-lg border-b border-[#D4A574]/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <span class="text-3xl">🏺</span>
+                <span class="font-serif text-2xl font-bold tracking-wider text-[#D4A574]">AntiqueAuction</span>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium tracking-wide">
+                <a href="#home" class="hover:text-[#D4A574] transition-colors">Home</a>
+                <a href="#antiques" class="hover:text-[#D4A574] transition-colors">Catalog</a>
+                <a href="#valuation" class="hover:text-[#D4A574] transition-colors">Valuation</a>
+                <a href="#verification" class="hover:text-[#D4A574] transition-colors">Verification</a>
+                <a href="#dashboard" class="hover:text-[#D4A574] transition-colors">Dashboard</a>
+            </nav>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center space-x-4">
+                <button onclick="toggleWatchlist()" class="relative p-2 text-[#D4A574] hover:text-white transition">
+                    <i class="fa-solid fa-heart text-xl"></i>
+                    <span id="watchlist-badge" class="absolute -top-1 -right-1 bg-red-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">0</span>
+                </button>
+                <button onclick="openModal('add-item-modal')" class="bg-[#D4A574] text-[#2D1B12] px-4 py-2 rounded font-semibold hover:bg-[#b88a58] transition shadow">
+                    + List Item
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+
+        <!-- Hero Section -->
+        <section id="home" class="bg-[#2D1B12] text-[#F5EDE6] rounded-2xl p-8 md:p-12 shadow-2xl relative overflow-hidden border border-[#D4A574]/30">
+            <div class="grid md:grid-cols-2 gap-8 items-center relative z-10">
+                <div class="space-y-6">
+                    <span class="inline-block px-3 py-1 bg-[#D4A574]/20 border border-[#D4A574] text-[#D4A574] text-xs uppercase tracking-widest rounded-full font-semibold">
+                        Curator's Spotlight
+                    </span>
+                    <h1 class="font-serif text-4xl md:text-5xl font-bold leading-tight">
+                        Timeless Treasures & Rare Historical Artifacts
+                    </h1>
+                    <p class="text-[#F5EDE6]/80 text-sm md:text-base">
+                        Bid on verified antiques, historical documents, and vintage luxury pieces with full authenticity certificates.
+                    </p>
+                    <div class="flex flex-wrap gap-4 pt-2">
+                        <a href="#antiques" class="bg-[#D4A574] text-[#2D1B12] px-6 py-3 rounded font-bold hover:bg-[#b88a58] transition shadow-lg">
+                            Explore Catalog
+                        </a>
+                        <a href="#valuation" class="border border-[#D4A574] text-[#D4A574] px-6 py-3 rounded font-bold hover:bg-[#D4A574]/10 transition">
+                            Get Valuation
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Hero Image Container with Reliable Loading -->
+                <div class="relative flex justify-center">
+                    <div class="w-full max-w-md bg-[#8B6B4A]/20 p-4 rounded-xl border border-[#D4A574]/40 backdrop-blur-sm">
+                        <img id="hero-img" 
+                             src="https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=600&q=80" 
+                             alt="18th Century Oil Painting" 
+                             class="w-full h-64 object-cover rounded-lg shadow-md mb-4 border border-[#D4A574]/20"
+                             onerror="this.onerror=null; this.src='https://picsum.photos/600/400?art';">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h3 id="hero-title" class="font-serif font-bold text-lg text-[#D4A574]">18th Century Oil Painting</h3>
+                                <p id="hero-price" class="text-sm font-semibold">Current Bid: $8,500</p>
+                            </div>
+                            <button onclick="openBidModal(2)" class="bg-[#D4A574] text-[#2D1B12] px-4 py-2 rounded text-xs font-bold hover:bg-white transition">
+                                Bid Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filters & Search Bar Section -->
+        <section id="antiques" class="space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-xl shadow-md border border-[#8B6B4A]/20">
+                <div class="w-full md:w-1/3 relative">
+                    <i class="fa-solid fa-search absolute left-3 top-3.5 text-gray-400"></i>
+                    <input type="text" id="search-input" oninput="filterAntiques()" placeholder="Search antiques by title or region..." class="w-full pl-10 pr-4 py-2 bg-[#F5EDE6]/50 border border-gray-300 rounded-lg focus:outline-none focus:border-[#8B6B4A]">
+                </div>
+
+                <div class="flex flex-wrap gap-3 w-full md:w-auto">
+                    <!-- Era Filter -->
+                    <select id="era-filter" onchange="filterAntiques()" class="px-3 py-2 bg-[#F5EDE6]/50 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-[#8B6B4A]">
+                        <option value="All">All Eras</option>
+                        <option value="Victorian">Victorian (1837-1901)</option>
+                        <option value="18th Century">18th Century</option>
+                        <option value="Art Deco">Art Deco (1920-1939)</option>
+                        <option value="Renaissance">Renaissance</option>
+                    </select>
+
+                    <!-- Category Filter -->
+                    <select id="category-filter" onchange="filterAntiques()" class="px-3 py-2 bg-[#F5EDE6]/50 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-[#8B6B4A]">
+                        <option value="All">All Categories</option>
+                        <option value="Furniture">Furniture</option>
+                        <option value="Art">Art</option>
+                        <option value="Jewelry">Jewelry</option>
+                        <option value="Books">Books & Manuscripts</option>
+                    </select>
+
+                    <!-- Sort -->
+                    <select id="sort-filter" onchange="filterAntiques()" class="px-3 py-2 bg-[#F5EDE6]/50 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-[#8B6B4A]">
+                        <option value="default">Sort by: Default</option>
+                        <option value="price-asc">Price: Low to High</option>
+                        <option value="price-desc">Price: High to Low</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Antique Cards Grid -->
+            <div id="antiques-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Cards will be populated dynamically via script.js -->
+            </div>
+        </section>
+
+        <!-- Simulated Expert Valuation Calculator -->
+        <section id="valuation" class="bg-white rounded-xl p-8 shadow-md border border-[#8B6B4A]/20">
+            <div class="max-w-2xl mx-auto space-y-6">
+                <div class="text-center space-y-2">
+                    <h2 class="font-serif text-3xl font-bold text-[#2D1B12]">Simulated Expert Valuation</h2>
+                    <p class="text-gray-600 text-sm">Estimate the auction value of your antique items based on era, condition, and rarity.</p>
+                </div>
+
+                <form id="valuation-form" onsubmit="calculateValuation(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-[#8B6B4A] mb-1">Item Category</label>
+                        <select id="val-category" class="w-full p-2.5 bg-[#F5EDE6]/50 border border-gray-300 rounded-lg text-sm" required>
+                            <option value="Furniture">Furniture & Decor</option>
+                            <option value="Art">Art & Paintings</option>
+                            <option value="Jewelry">Jewelry & Timepieces</option>
+                            <option value="Books">Rare Books & Manuscripts</option>
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-[#8B6B4A] mb-1">Estimated Age (Years)</label>
+                            <input type="number" id="val-age" min="10" max="1000" placeholder="e.g. 150" class="w-full p-2.5 bg-[#F5EDE6]/50 border border-gray-300 rounded-lg text-sm" required>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-[#8B6B4A] mb-1">Condition</label>
+                            <select id="val-condition" class="w-full p-2.5 bg-[#F5EDE6]/50 border border-gray-300 rounded-lg text-sm" required>
+                                <option value="1.5">Mint / Excellent</option>
+                                <option value="1.2">Good / Minor Wear</option>
+                                <option value="0.8">Fair / Restored</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-[#8B6B4A] text-white py-3 rounded-lg font-bold hover:bg-[#2D1B12] transition shadow">
+                        Calculate Valuation
+                    </button>
+                </form>
+
+                <div id="valuation-result" class="hidden p-6 bg-[#F5EDE6] rounded-xl border border-[#D4A574] text-center space-y-2">
+                    <span class="text-xs font-semibold uppercase tracking-widest text-[#8B6B4A]">Estimated Appraisal Value</span>
+                    <div id="val-amount" class="text-3xl font-serif font-bold text-[#2D1B12]">$0 - $0</div>
+                    <p id="val-notes" class="text-xs text-gray-600">Based on historical sales records and current market rarity indicators.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Authenticity Verification Lookup -->
+        <section id="verification" class="bg-[#2D1B12] text-[#F5EDE6] rounded-xl p-8 shadow-md border border-[#D4A574]/30">
+            <div class="max-w-xl mx-auto text-center space-y-6">
+                <h2 class="font-serif text-3xl font-bold text-[#D4A574]">Authenticity Verification</h2>
+                <p class="text-sm text-[#F5EDE6]/80">Enter a Certificate Serial Number to verify provenance and official curation records.</p>
+
+                <div class="flex gap-2">
+                    <input type="text" id="cert-input" placeholder="e.g. COA-2024-8841" class="flex-grow p-3 rounded-lg bg-white text-[#2D1B12] border-none focus:outline-none">
+                    <button onclick="verifyCertificate()" class="bg-[#D4A574] text-[#2D1B12] px-6 py-3 rounded-lg font-bold hover:bg-white transition">
+                        Verify
+                    </button>
+                </div>
+
+                <div id="cert-output" class="hidden text-left bg-[#8B6B4A]/30 p-6 rounded-lg border border-[#D4A574]/50 space-y-3">
+                    <!-- Authenticity output loaded via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="bg-white rounded-xl p-8 shadow-md border border-[#8B6B4A]/20 space-y-6">
+            <h2 class="font-serif text-3xl font-bold text-[#2D1B12]">Collector Dashboard</h2>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- My Watchlist -->
+                <div class="border border-gray-200 rounded-lg p-4 space-y-4">
+                    <h3 class="font-bold text-lg border-b pb-2 flex justify-between items-center">
+                        <span><i class="fa-solid fa-heart text-red-500 mr-2"></i>My Watchlist</span>
+                        <span id="watchlist-count" class="text-xs bg-gray-100 px-2 py-1 rounded">0 items</span>
+                    </h3>
+                    <div id="watchlist-items" class="space-y-3 max-h-60 overflow-y-auto">
+                        <p class="text-gray-400 text-sm italic">No items in your watchlist yet.</p>
+                    </div>
+                </div>
+
+                <!-- Active Bids -->
+                <div class="border border-gray-200 rounded-lg p-4 space-y-4">
+                    <h3 class="font-bold text-lg border-b pb-2 flex justify-between items-center">
+                        <span><i class="fa-solid fa-gavel text-[#8B6B4A] mr-2"></i>My Recent Bids</span>
+                    </h3>
+                    <div id="recent-bids-list" class="space-y-3 max-h-60 overflow-y-auto">
+                        <!-- Recent Bids list rendered by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Bidding Modal -->
+    <div id="bid-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl max-w-lg w-full p-6 space-y-4 relative shadow-2xl border border-[#8B6B4A]">
+            <button onclick="closeModal('bid-modal')" class="absolute top-4 right-4 text-gray-500 hover:text-black">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <h3 id="modal-item-title" class="font-serif font-bold text-2xl text-[#2D1B12]">Item Title</h3>
+            <img id="modal-item-img" src="" alt="Antique" class="w-full h-48 object-cover rounded-lg border border-gray-200">
+            
+            <div class="space-y-2 text-sm text-gray-700">
+                <p><strong>Era:</strong> <span id="modal-item-era"></span></p>
+                <p><strong>Provenance:</strong> <span id="modal-item-provenance"></span></p>
+                <p><strong>Current High Bid:</strong> <span id="modal-item-price" class="font-bold text-[#8B6B4A] text-lg"></span></p>
+            </div>
+
+            <div class="space-y-2">
+                <label class="block text-xs font-bold uppercase tracking-wider">Your Bid Amount ($)</label>
+                <input type="number" id="bid-amount-input" class="w-full p-2.5 border border-gray-300 rounded-lg font-bold" placeholder="Enter bid amount">
+                <p id="bid-error" class="text-red-500 text-xs hidden"></p>
+            </div>
+
+            <button onclick="submitBid()" class="w-full bg-[#8B6B4A] text-white py-3 rounded-lg font-bold hover:bg-[#2D1B12] transition">
+                Confirm & Place Bid
+            </button>
+        </div>
+    </div>
+
+    <!-- Add Item Modal -->
+    <div id="add-item-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl max-w-lg w-full p-6 space-y-4 relative shadow-2xl border border-[#8B6B4A]">
+            <button onclick="closeModal('add-item-modal')" class="absolute top-4 right-4 text-gray-500 hover:text-black">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <h3 class="font-serif font-bold text-2xl text-[#2D1B12]">List New Antique</h3>
+            
+            <form id="add-item-form" onsubmit="addNewAntique(event)" class="space-y-3">
+                <input type="text" id="new-name" placeholder="Antique Title" class="w-full p-2 border rounded" required>
+                <div class="grid grid-cols-2 gap-2">
+                    <select id="new-category" class="p-2 border rounded" required>
+                        <option value="Furniture">Furniture</option>
+                        <option value="Art">Art</option>
+                        <option value="Jewelry">Jewelry</option>
+                        <option value="Books">Books</option>
+                    </select>
+                    <input type="text" id="new-era" placeholder="Era (e.g. Victorian)" class="p-2 border rounded" required>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="text" id="new-origin" placeholder="Origin (e.g. England)" class="p-2 border rounded" required>
+                    <input type="number" id="new-price" placeholder="Starting Price ($)" class="p-2 border rounded" required>
+                </div>
+                <input type="url" id="new-image" placeholder="Image URL (Unsplash or direct image link)" class="w-full p-2 border rounded" required>
+                <textarea id="new-desc" placeholder="Brief description & provenance..." class="w-full p-2 border rounded h-20" required></textarea>
+                
+                <button type="submit" class="w-full bg-[#8B6B4A] text-white py-2.5 rounded font-bold hover:bg-[#2D1B12] transition">
+                    Publish Listing
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-[#2D1B12] text-[#F5EDE6]/60 py-8 border-t border-[#D4A574]/30 mt-12 text-center text-sm">
+        <p>&copy; 2026 AntiqueAuction Platform · Task ID: WD-AUC-005 · Data Alcott Systems</p>
+    </footer>
+
+    <!-- Custom Script -->
+    <script src="script.js"></script>
+</body>
+</html>
